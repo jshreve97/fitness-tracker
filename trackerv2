@@ -1,0 +1,70 @@
+import openpyxl
+import datetime
+import tkinter as tk
+
+# Create the GUI
+root = tk.Tk()
+root.title("Fitness Tracker")
+
+# Create the labels and entry fields for the exercise information
+exercise_label = tk.Label(root, text="Exercise name:")
+exercise_entry = tk.Entry(root)
+weight_label = tk.Label(root, text="Weight used (lbs):")
+weight_entry = tk.Entry(root)
+reps_label = tk.Label(root, text="Reps done:")
+reps_entry = tk.Entry(root)
+sets_label = tk.Label(root, text="Sets done:")
+sets_entry = tk.Entry(root)
+
+# Create the "Add Exercise" button
+def add_exercise():
+    # Get user input
+    exercise = exercise_entry.get()
+    weight = weight_entry.get()
+    reps = reps_entry.get()
+    sets = sets_entry.get()
+
+    # Get current date and time
+    now = datetime.datetime.now()
+    date = now.strftime("%m/%d/%Y %H:%M:%S")
+
+    # Add data to the Excel sheet
+    row = [date, exercise, weight, reps, sets]
+    sheet.append(row)
+
+    # Clear the entry fields
+    exercise_entry.delete(0, tk.END)
+    weight_entry.delete(0, tk.END)
+    reps_entry.delete(0, tk.END)
+    sets_entry.delete(0, tk.END)
+
+    # Save the Excel file
+    workbook.save(filename)
+
+add_button = tk.Button(root, text="Add Exercise", command=add_exercise)
+
+# Pack the GUI elements
+exercise_label.pack()
+exercise_entry.pack()
+weight_label.pack()
+weight_entry.pack()
+reps_label.pack()
+reps_entry.pack()
+sets_label.pack()
+sets_entry.pack()
+add_button.pack()
+
+# Open the Excel file (create it if it doesn't exist)
+filename = "fitness_tracker.xlsx"
+try:
+    workbook = openpyxl.load_workbook(filename)
+    sheet = workbook.active
+except FileNotFoundError:
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "Fitness Tracker"
+    header_row = ["Date", "Exercise", "Weight (lbs)", "Reps", "Sets"]
+    sheet.append(header_row)
+
+# Run the GUI
+root.mainloop()
